@@ -112,7 +112,6 @@ unsigned long last_millis_reconnect = 0;
 unsigned long last_millis_check = 0;
 unsigned long last_millis_send_status = 0;
 
-
 // Текущее кол-во попыток связаться с сервером
 int check_cnt = 0;
 // Максимальное кол-во попыток связаться с сервером
@@ -128,8 +127,16 @@ EthernetServer server(DEBUG_SERVER_PORT);
 // Кол-во клиентов способных подключиться по telnet
 EthernetClient clients[10];
 
-
 PubSubClient client(mqtt_net);
+
+
+// Преобразование IP Адреса
+String DisplayAddress(IPAddress address) {
+ return String(address[0]) + "." + 
+        String(address[1]) + "." + 
+        String(address[2]) + "." + 
+        String(address[3]);
+}
 
 // Функция вывода в лог
 void debug_log(String str) {
@@ -139,14 +146,6 @@ void debug_log(String str) {
       clients[i].println(str);
     }
   }
-}
-
-// Преобразование IP Адреса
-String DisplayAddress(IPAddress address) {
- return String(address[0]) + "." + 
-        String(address[1]) + "." + 
-        String(address[2]) + "." + 
-        String(address[3]);
 }
 
 // Проверка наличия сети, попытка подключиться к серверу MajorDomo по 80 порту
