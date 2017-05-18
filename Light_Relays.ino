@@ -118,7 +118,6 @@ int check_cnt = 0;
 // Максимальное кол-во попыток связаться с сервером
 const int check_cnt_max = SERVER_CONNECT_MAX_COUNT; 
 
-
 const int debug_pin =  DEBUG_PIN;
 int debug_state = 0;
 
@@ -365,7 +364,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void setup() {
-  
   Serial.begin(9600);
   Ethernet.begin(mac, ip);
   server.begin();
@@ -565,13 +563,13 @@ void loop() {
       }
 
   }
-  /*
+  
   //Отправляем статусы лам на MQTT Server
-  if (millis() - last_millis_send_status > 15000) {
+  if (!debug_state && last_millis_send_status < 1) {
     last_millis_send_status = millis();
     sendStatusLights();
   }
-  */
+  
   
   // Проверяем коннект к серверу MQTT раз в 5 секунд
   if (millis() - last_millis_reconnect > 5000) {
