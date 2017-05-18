@@ -25,10 +25,8 @@ IPAddress mqtt_server(192,168,1,200);
 #define MQTT_PORT       1883
 #define MQTT_CLIENT_ID  "lightshild"
 
-#define SERVER_IP "192.168.1.200"
-
 // IP адрес сервера MajorDomo куда надо посылать команду на переключение света, при назатии на выключатель
-char Server_IP[] = SERVER_IP;
+char Server_IP[14] = "192.168.1.200";
 const int Server_PORT = 80;
 
 // Скрипты для переключения светильников, список взят из MajorDomo
@@ -122,7 +120,7 @@ int check_cnt = 0;
 const int check_cnt_max = SERVER_CONNECT_MAX_COUNT; 
 
 
-const int debug_pin =  DEBUG_PINDEBUG_PIN;
+const int debug_pin =  DEBUG_PIN;
 int debug_state = 0;
 
 EthernetClient net;
@@ -281,7 +279,7 @@ void httpRequest(String url) {
     debug_log("connecting...");
     // send the HTTP GET request:
     net.println("GET " + url + " HTTP/1.1");
-    net.println("Host: " + SERVER_IP);
+    net.println("Host: " + (String)Server_IP);
     net.println("User-Agent: Light_Shild");
     net.println("Connection: close");
     net.println();
