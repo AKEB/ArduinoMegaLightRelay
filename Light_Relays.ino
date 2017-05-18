@@ -477,82 +477,91 @@ void loop() {
     int btn_13_state = digitalRead(btn_13);
     int btn_14_state = digitalRead(btn_14);
 
-    int changes = 0;
-    
       if (btn_01_state != btn_01_state_prev) {
         light_01_state = !light_01_state;
         btn_01_state_prev = btn_01_state;
-        changes = 1;
+        digitalWrite(light_01, light_01_state);
+        if (!debug_state) client.publish("home/Light/01", light_01_state ? "1":"0");
       }
       if (btn_02_state != btn_02_state_prev) {
         light_02_state = !light_02_state;
         btn_02_state_prev = btn_02_state;
-        changes = 1;
+        digitalWrite(light_02, light_02_state);
+        if (!debug_state) client.publish("home/Light/02", light_02_state ? "1":"0");
       }
       if (btn_03_state != btn_03_state_prev) {
         light_03_state = !light_03_state;
         btn_03_state_prev = btn_03_state;
-        changes = 1;
+        digitalWrite(light_03, light_03_state);
+        if (!debug_state) client.publish("home/Light/03", light_03_state ? "1":"0");
       }
       if (btn_04_state != btn_04_state_prev) {
         light_04_state = !light_04_state;
         btn_04_state_prev = btn_04_state;
-        changes = 1;
+        digitalWrite(light_04, light_04_state);
+        if (!debug_state) client.publish("home/Light/04", light_04_state ? "1":"0");
       }
       if (btn_05_state != btn_05_state_prev) {
         light_05_state = !light_05_state;
         btn_05_state_prev = btn_05_state;
-        changes = 1;
+        digitalWrite(light_05, light_05_state);
+        if (!debug_state) client.publish("home/Light/05", light_05_state ? "1":"0");
       }
       if (btn_06_state != btn_06_state_prev) {
         light_06_state = !light_06_state;
         btn_06_state_prev = btn_06_state;
-        changes = 1;
+        digitalWrite(light_06, light_06_state);
+        if (!debug_state) client.publish("home/Light/06", light_06_state ? "1":"0");
       }
       if (btn_07_state != btn_07_state_prev) {
         light_07_state = !light_07_state;
         btn_07_state_prev = btn_07_state;
-        changes = 1;
+        digitalWrite(light_07, light_07_state);
+        if (!debug_state) client.publish("home/Light/07", light_07_state ? "1":"0");
       }
       if (btn_08_state != btn_08_state_prev) {
         light_08_state = !light_08_state;
         btn_08_state_prev = btn_08_state;
-        changes = 1;
+        digitalWrite(light_08, light_08_state);
+        if (!debug_state) client.publish("home/Light/08", light_08_state ? "1":"0");
       }
       if (btn_09_state != btn_09_state_prev) {
         light_09_state = !light_09_state;
         btn_09_state_prev = btn_09_state;
-        changes = 1;
+        digitalWrite(light_09, light_09_state);
+        if (!debug_state) client.publish("home/Light/09", light_09_state ? "1":"0");
       }
       if (btn_10_state != btn_10_state_prev) {
         light_10_state = !light_10_state;
         btn_10_state_prev = btn_10_state;
-        changes = 1;
+        digitalWrite(light_10, light_10_state);
+        if (!debug_state) client.publish("home/Light/10", light_10_state ? "1":"0");
       }
       if (btn_11_state != btn_11_state_prev) {
         light_11_state = !light_11_state;
         btn_11_state_prev = btn_11_state;
-        changes = 1;
+        digitalWrite(light_11, light_11_state);
+        if (!debug_state) client.publish("home/Light/11", light_11_state ? "1":"0");
       }
       if (btn_12_state != btn_12_state_prev) {
         light_12_state = !light_12_state;
         btn_12_state_prev = btn_12_state;
-        changes = 1;
+        digitalWrite(light_12, light_12_state);
+        if (!debug_state) client.publish("home/Light/12", light_12_state ? "1":"0");
       }
       if (btn_13_state != btn_13_state_prev) {
         light_13_state = !light_13_state;
         btn_13_state_prev = btn_13_state;
-        changes = 1;
+        digitalWrite(light_13, light_13_state);
+        if (!debug_state) client.publish("home/Light/13", light_13_state ? "1":"0");
       }
       if (btn_14_state != btn_14_state_prev) {
         light_14_state = !light_14_state;
         btn_14_state_prev = btn_14_state;
-        changes = 1;
+        digitalWrite(light_14, light_14_state);
+        if (!debug_state) client.publish("home/Light/14", light_14_state ? "1":"0");
       }
 
-      if (changes > 0) {
-        sendStatusLights();
-      }    
   }
   
   //Отправляем статусы лам на MQTT Server
