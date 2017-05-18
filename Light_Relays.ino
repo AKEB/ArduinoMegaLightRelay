@@ -412,7 +412,7 @@ void setup() {
 
   connect_mqtt();
 
-  sendStatusLights();
+  delay(2);
 }
 
 
