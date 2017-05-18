@@ -410,9 +410,10 @@ void setup() {
   pinMode(btn_13, INPUT);
   pinMode(btn_14, INPUT);
 
-  connect_mqtt();
 
-  delay(2);
+  delay(2000);
+
+  connect_mqtt();
 }
 
 
