@@ -19,13 +19,13 @@ byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
 IPAddress ip(192,168,1,100);
 
 // Настройки сервера MQTT
-IPAddress mqtt_server(192,168,1,200);
+//IPAddress mqtt_server(192,168,1,200);
 #define MQTT_PORT       1883
 #define MQTT_CLIENT_ID  "lightshild"
 
 // IP адрес сервера MajorDomo куда надо посылать команду на переключение света, при назатии на выключатель
 char Server_IP[14] = "192.168.1.200";
-const int Server_PORT = 80;
+//const int Server_PORT = 80;
 
 // Скрипты для переключения светильников, список взят из MajorDomo
 const String Light_01_switch_url = "/objects/?object=Light_01&op=m&m=switch&";
@@ -162,7 +162,7 @@ void check_net() {
 
     net.setTimeout(500);
     net.stop();
-    if (net.connect(Server_IP, Server_PORT)) {
+    if (net.connect(Server_IP, MQTT_PORT)) {
       check_cnt = 0;
       debug_state = 0;
       return;
@@ -197,7 +197,6 @@ void connect_mqtt() {
   // Пытаемся подключиться
   if (!client.connected()) {
     mqtt_net.stop();
-    //client.begin(MQTT_SERVER, MQTT_PORT, mqtt_net);
     if (!client.connect(MQTT_CLIENT_ID)) {
       debug_log("error");
       return;
@@ -208,34 +207,6 @@ void connect_mqtt() {
   
   // Подписываемся на топики
   client.subscribe("home/Light/#");
-}
-
-// Отсылка данных по HTTP
-void httpRequest(String url) {
-  debug_log("httpRequest "+ url);
-  // Проверяем сеть
-  check_net();
-
-  // Проверяем режим Debug
-  if (debug_state) {
-    debug_log("net not available");
-    return;
-  }
-
-  // Подключаемся и отсылаем GET запрос на HTTP
-  net.stop();
-  if (net.connect(Server_IP, Server_PORT)) {
-    debug_log("connecting...");
-    // send the HTTP GET request:
-    net.println("GET " + url + " HTTP/1.1");
-    net.println("Host: " + (String)Server_IP);
-    net.println("User-Agent: Light_Shild");
-    net.println("Connection: close");
-    net.println();
-  } else {
-    debug_log("connection failed");
-  }
-  
 }
 
 //Отправляем статусы ламп на сервер MQTT
@@ -401,7 +372,9 @@ void setup() {
   W5100.setRetransmissionTime(0x07D0);
   W5100.setRetransmissionCount(3);
 
-  client.setServer(mqtt_server, MQTT_PORT);
+  //client.setServer(mqtt_server, MQTT_PORT);
+  client.setServer(Server_IP, MQTT_PORT);
+  
   client.setCallback(callback);
 
   debug_log("My IP address: ");
@@ -505,10 +478,7 @@ void loop() {
     int btn_14_state = digitalRead(btn_14);
 
     int changes = 0;
-
-    // Если включен режим DEBUG то переключаем свет без СЕТИ
-   // if (debug_state) {
-   //   debug_log("BTN debug_state=1");
+    
       if (btn_01_state != btn_01_state_prev) {
         light_01_state = !light_01_state;
         btn_01_state_prev = btn_01_state;
@@ -582,73 +552,11 @@ void loop() {
 
       if (changes > 0) {
         sendStatusLights();
-      }
-/*      
-    } else {
-      // Сеть есть и дебаг режим выключен
-      debug_log("BTN debug_state=0");
-      if (btn_01_state != btn_01_state_prev) {
-        btn_01_state_prev = btn_01_state;
-        httpRequest(Light_01_switch_url);
-      }
-      if (btn_02_state != btn_02_state_prev) {
-        btn_02_state_prev = btn_02_state;
-        httpRequest(Light_02_switch_url);
-      }
-      if (btn_03_state != btn_03_state_prev) {
-        btn_03_state_prev = btn_03_state;
-        httpRequest(Light_03_switch_url);
-      }
-      if (btn_04_state != btn_04_state_prev) {
-        btn_04_state_prev = btn_04_state;
-        httpRequest(Light_04_switch_url);
-      }
-      if (btn_05_state != btn_05_state_prev) {
-        btn_05_state_prev = btn_05_state;
-        httpRequest(Light_05_switch_url);
-      }
-      if (btn_06_state != btn_06_state_prev) {
-        btn_06_state_prev = btn_06_state;
-        httpRequest(Light_06_switch_url);
-      }
-      if (btn_07_state != btn_07_state_prev) {
-        btn_07_state_prev = btn_07_state;
-        httpRequest(Light_07_switch_url);
-      }
-      if (btn_08_state != btn_08_state_prev) {
-        btn_08_state_prev = btn_08_state;
-        httpRequest(Light_08_switch_url);
-      }
-      if (btn_09_state != btn_09_state_prev) {
-        btn_09_state_prev = btn_09_state;
-        httpRequest(Light_09_switch_url);
-      }
-      if (btn_10_state != btn_10_state_prev) {
-        btn_10_state_prev = btn_10_state;
-        httpRequest(Light_10_switch_url);
-      }
-      if (btn_11_state != btn_11_state_prev) {
-        btn_11_state_prev = btn_11_state;
-        httpRequest(Light_11_switch_url);
-      }
-      if (btn_12_state != btn_12_state_prev) {
-        btn_12_state_prev = btn_12_state;
-        httpRequest(Light_12_switch_url);
-      }
-      if (btn_13_state != btn_13_state_prev) {
-        btn_13_state_prev = btn_13_state;
-        httpRequest(Light_13_switch_url);
-      }
-      if (btn_14_state != btn_14_state_prev) {
-        btn_14_state_prev = btn_14_state;
-        httpRequest(Light_14_switch_url);
-      }
-    }
-*/    
+      }    
   }
   
   //Отправляем статусы лам на MQTT Server
-  if (millis() - last_millis_send_status > 30000) {
+  if (millis() - last_millis_send_status > 15000) {
     last_millis_send_status = millis();
     sendStatusLights();
   }
