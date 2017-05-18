@@ -265,20 +265,20 @@ void sendStatusLights() {
     return;
   }
   
-  client.publish("home/Light/01", (char *)light_01_state);
-  client.publish("home/Light/02", (char *)light_02_state);
-  client.publish("home/Light/03", (char *)light_03_state);
-  client.publish("home/Light/04", (char *)light_04_state);
-  client.publish("home/Light/05", (char *)light_05_state);
-  client.publish("home/Light/06", (char *)light_06_state);
-  client.publish("home/Light/07", (char *)light_07_state);
-  client.publish("home/Light/08", (char *)light_08_state);
-  client.publish("home/Light/09", (char *)light_09_state);
-  client.publish("home/Light/10", (char *)light_10_state);
-  client.publish("home/Light/11", (char *)light_11_state);
-  client.publish("home/Light/12", (char *)light_12_state);
-  client.publish("home/Light/13", (char *)light_13_state);
-  client.publish("home/Light/14", (char *)light_14_state);
+  client.publish("home/Light/01", light_01_state ? "1":"0");
+  client.publish("home/Light/02", light_02_state ? "1":"0");
+  client.publish("home/Light/03", light_03_state ? "1":"0");
+  client.publish("home/Light/04", light_04_state ? "1":"0");
+  client.publish("home/Light/05", light_05_state ? "1":"0");
+  client.publish("home/Light/06", light_06_state ? "1":"0");
+  client.publish("home/Light/07", light_07_state ? "1":"0");
+  client.publish("home/Light/08", light_08_state ? "1":"0");
+  client.publish("home/Light/09", light_09_state ? "1":"0");
+  client.publish("home/Light/10", light_10_state ? "1":"0");
+  client.publish("home/Light/11", light_11_state ? "1":"0");
+  client.publish("home/Light/12", light_12_state ? "1":"0");
+  client.publish("home/Light/13", light_13_state ? "1":"0");
+  client.publish("home/Light/14", light_14_state ? "1":"0");
   
   
 }
@@ -292,102 +292,102 @@ void callback(char* topic, byte* payload, unsigned int length) {
   
   if (topic_String.equals("home/Light/01")) {
     if (payload_String.equals("1")) {
-      light_01_state = HIGH;
+      light_01_state = 1;
     } else if(payload_String.equals("0")) {
-      light_01_state = LOW;
+      light_01_state = 0;
     }
     // Изменяем состояние лампочки (Пина для реле)
     digitalWrite(light_01, light_01_state);
     
   } else if (topic_String.equals("home/Light/02")) {
     if (payload_String.equals("1")) {
-      light_02_state = HIGH;
+      light_02_state = 1;
     } else if(payload_String.equals("0")) {
-      light_02_state = LOW;
+      light_02_state = 0;
     }
     digitalWrite(light_02, light_02_state);
   } else if (topic_String.equals("home/Light/03")) {
     if (payload_String.equals("1")) {
-      light_03_state = HIGH;
+      light_03_state = 1;
     } else if(payload_String.equals("0")) {
-      light_03_state = LOW;
+      light_03_state = 0;
     }
     digitalWrite(light_03, light_03_state);
   } else if (topic_String.equals("home/Light/04")) {
     if (payload_String.equals("1")) {
-      light_04_state = HIGH;
+      light_04_state = 1;
     } else if(payload_String.equals("0")) {
-      light_04_state = LOW;
+      light_04_state = 0;
     }
     digitalWrite(light_04, light_04_state);
   } else if (topic_String.equals("home/Light/05")) {
     if (payload_String.equals("1")) {
-      light_05_state = HIGH;
+      light_05_state = 1;
     } else if(payload_String.equals("0")) {
-      light_05_state = LOW;
+      light_05_state = 0;
     }
     digitalWrite(light_05, light_05_state);
   } else if (topic_String.equals("home/Light/06")) {
     if (payload_String.equals("1")) {
-      light_06_state = HIGH;
+      light_06_state = 1;
     } else if(payload_String.equals("0")) {
-      light_06_state = LOW;
+      light_06_state = 0;
     }
     digitalWrite(light_06, light_06_state);
   } else if (topic_String.equals("home/Light/07")) {
     if (payload_String.equals("1")) {
-      light_07_state = HIGH;
+      light_07_state = 1;
     } else if(payload_String.equals("0")) {
-      light_07_state = LOW;
+      light_07_state = 0;
     }
     digitalWrite(light_07, light_07_state);
   } else if (topic_String.equals("home/Light/08")) {
     if (payload_String.equals("1")) {
-      light_08_state = HIGH;
+      light_08_state = 1;
     } else if(payload_String.equals("0")) {
-      light_08_state = LOW;
+      light_08_state = 0;
     }
     digitalWrite(light_08, light_08_state);
   } else if (topic_String.equals("home/Light/09")) {
     if (payload_String.equals("1")) {
-      light_09_state = HIGH;
+      light_09_state = 1;
     } else if(payload_String.equals("0")) {
-      light_09_state = LOW;
+      light_09_state = 0;
     }
     digitalWrite(light_09, light_09_state);
   } else if (topic_String.equals("home/Light/10")) {
     if (payload_String.equals("1")) {
-      light_10_state = HIGH;
+      light_10_state = 1;
     } else if(payload_String.equals("0")) {
-      light_10_state = LOW;
+      light_10_state = 0;
     }
     digitalWrite(light_10, light_10_state);
   } else if (topic_String.equals("home/Light/11")) {
     if (payload_String.equals("1")) {
-      light_11_state = HIGH;
+      light_11_state = 1;
     } else if(payload_String.equals("0")) {
-      light_11_state = LOW;
+      light_11_state = 0;
     }
     digitalWrite(light_11, light_11_state);
   } else if (topic_String.equals("home/Light/12")) {
     if (payload_String.equals("1")) {
-      light_12_state = HIGH;
+      light_12_state = 1;
     } else if(payload_String.equals("0")) {
-      light_12_state = LOW;
+      light_12_state = 0;
     }
     digitalWrite(light_12, light_12_state);
   } else if (topic_String.equals("home/Light/13")) {
     if (payload_String.equals("1")) {
-      light_13_state = HIGH;
+      light_13_state = 1;
     } else if(payload_String.equals("0")) {
-      light_13_state = LOW;
+      light_13_state = 0;
     }
     digitalWrite(light_13, light_13_state);
   } else if (topic_String.equals("home/Light/14")) {
     if (payload_String.equals("1")) {
-      light_14_state = HIGH;
+      light_14_state = 1;
     } else if(payload_String.equals("0")) {
-      light_14_state = LOW;
+      light_14_state = 0;
     }
     digitalWrite(light_14, light_14_state);
   }
