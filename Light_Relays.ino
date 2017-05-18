@@ -150,56 +150,6 @@ String DisplayAddress(IPAddress address) {
         String(address[3]);
 }
 
-
-void setup() {
-  
-  Serial.begin(9600);
-  Ethernet.begin(mac, ip);
-  server.begin();
-  W5100.setRetransmissionTime(0x07D0);
-  W5100.setRetransmissionCount(3);
-
-  client.setServer(mqtt_server, MQTT_PORT);
-  client.setCallback(callback);
-
-  debug_log("My IP address: ");
-  debug_log(DisplayAddress(Ethernet.localIP()));
-  
-  pinMode(debug_pin, INPUT);
-  
-  pinMode(light_01, OUTPUT);
-  pinMode(light_02, OUTPUT);
-  pinMode(light_03, OUTPUT);
-  pinMode(light_04, OUTPUT);
-  pinMode(light_05, OUTPUT);
-  pinMode(light_06, OUTPUT);
-  pinMode(light_07, OUTPUT);
-  pinMode(light_08, OUTPUT);
-  pinMode(light_09, OUTPUT);
-  pinMode(light_10, OUTPUT);
-  pinMode(light_11, OUTPUT);
-  pinMode(light_12, OUTPUT);
-  pinMode(light_13, OUTPUT);
-  pinMode(light_14, OUTPUT);
-
-  pinMode(btn_01, INPUT);
-  pinMode(btn_02, INPUT);
-  pinMode(btn_03, INPUT);
-  pinMode(btn_04, INPUT);
-  pinMode(btn_05, INPUT);
-  pinMode(btn_06, INPUT);
-  pinMode(btn_07, INPUT);
-  pinMode(btn_08, INPUT);
-  pinMode(btn_09, INPUT);
-  pinMode(btn_10, INPUT);
-  pinMode(btn_11, INPUT);
-  pinMode(btn_12, INPUT);
-  pinMode(btn_13, INPUT);
-  pinMode(btn_14, INPUT);
-
-  connect();  
-}
-
 // Проверка наличия сети, попытка подключиться к серверу MajorDomo по 80 порту
 void check_net() {
   int debug = digitalRead(debug_pin);
@@ -398,6 +348,56 @@ void callback(char* topic, byte* payload, unsigned int length) {
     digitalWrite(light_14, light_14_state);
   }
 }
+
+void setup() {
+  
+  Serial.begin(9600);
+  Ethernet.begin(mac, ip);
+  server.begin();
+  W5100.setRetransmissionTime(0x07D0);
+  W5100.setRetransmissionCount(3);
+
+  client.setServer(mqtt_server, MQTT_PORT);
+  client.setCallback(callback);
+
+  debug_log("My IP address: ");
+  debug_log(DisplayAddress(Ethernet.localIP()));
+  
+  pinMode(debug_pin, INPUT);
+  
+  pinMode(light_01, OUTPUT);
+  pinMode(light_02, OUTPUT);
+  pinMode(light_03, OUTPUT);
+  pinMode(light_04, OUTPUT);
+  pinMode(light_05, OUTPUT);
+  pinMode(light_06, OUTPUT);
+  pinMode(light_07, OUTPUT);
+  pinMode(light_08, OUTPUT);
+  pinMode(light_09, OUTPUT);
+  pinMode(light_10, OUTPUT);
+  pinMode(light_11, OUTPUT);
+  pinMode(light_12, OUTPUT);
+  pinMode(light_13, OUTPUT);
+  pinMode(light_14, OUTPUT);
+
+  pinMode(btn_01, INPUT);
+  pinMode(btn_02, INPUT);
+  pinMode(btn_03, INPUT);
+  pinMode(btn_04, INPUT);
+  pinMode(btn_05, INPUT);
+  pinMode(btn_06, INPUT);
+  pinMode(btn_07, INPUT);
+  pinMode(btn_08, INPUT);
+  pinMode(btn_09, INPUT);
+  pinMode(btn_10, INPUT);
+  pinMode(btn_11, INPUT);
+  pinMode(btn_12, INPUT);
+  pinMode(btn_13, INPUT);
+  pinMode(btn_14, INPUT);
+
+  connect();  
+}
+
 
 
 void loop() {
