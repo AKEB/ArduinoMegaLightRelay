@@ -25,7 +25,7 @@ IPAddress ip(192,168,1,100);
 
 // IP адрес сервера MajorDomo куда надо посылать команду на переключение света, при назатии на выключатель
 char Server_IP[14] = "192.168.1.200";
-//const int Server_PORT = 80;
+const int Server_PORT = 80;
 
 // Скрипты для переключения светильников, список взят из MajorDomo
 const String Light_01_switch_url = "/objects/?object=Light_01&op=m&m=switch&";
@@ -208,6 +208,36 @@ void connect_mqtt() {
   client.subscribe("home/Light/#");
 }
 
+
+// Отсылка данных по HTTP
+void httpRequest(String url) {
+  debug_log("httpRequest "+ url);
+  // Проверяем сеть
+  check_net();
+
+  // Проверяем режим Debug
+  if (debug_state) {
+    debug_log("net not available");
+    return;
+  }
+
+  // Подключаемся и отсылаем GET запрос на HTTP
+  net.stop();
+  if (net.connect(Server_IP, Server_PORT)) {
+    debug_log("connecting...");
+    // send the HTTP GET request:
+    net.println("GET " + url + " HTTP/1.1");
+    net.println("Host: " + (String)Server_IP);
+    net.println("User-Agent: Light_Shild");
+    net.println("Connection: close");
+    net.println();
+  } else {
+    debug_log("connection failed");
+  }
+  
+}
+
+
 //Отправляем статусы ламп на сервер MQTT
 void sendStatusLights() {
   debug_log("sendStatusLights");
@@ -234,22 +264,21 @@ void sendStatusLights() {
     debug_log("net not available");
     return;
   }
-  
-  client.publish("home/Light/01", light_01_state ? "1":"0");
-  client.publish("home/Light/02", light_02_state ? "1":"0");
-  client.publish("home/Light/03", light_03_state ? "1":"0");
-  client.publish("home/Light/04", light_04_state ? "1":"0");
-  client.publish("home/Light/05", light_05_state ? "1":"0");
-  client.publish("home/Light/06", light_06_state ? "1":"0");
-  client.publish("home/Light/07", light_07_state ? "1":"0");
-  client.publish("home/Light/08", light_08_state ? "1":"0");
-  client.publish("home/Light/09", light_09_state ? "1":"0");
-  client.publish("home/Light/10", light_10_state ? "1":"0");
-  client.publish("home/Light/11", light_11_state ? "1":"0");
-  client.publish("home/Light/12", light_12_state ? "1":"0");
-  client.publish("home/Light/13", light_13_state ? "1":"0");
-  client.publish("home/Light/14", light_14_state ? "1":"0");
-  
+
+  httpRequest(Light_01_switch_url+ (light_01_state ? "turnOn":"turnOff"));
+  httpRequest(Light_02_switch_url+ (light_02_state ? "turnOn":"turnOff"));
+  httpRequest(Light_03_switch_url+ (light_03_state ? "turnOn":"turnOff"));
+  httpRequest(Light_04_switch_url+ (light_04_state ? "turnOn":"turnOff"));
+  httpRequest(Light_05_switch_url+ (light_05_state ? "turnOn":"turnOff"));
+  httpRequest(Light_06_switch_url+ (light_06_state ? "turnOn":"turnOff"));
+  httpRequest(Light_07_switch_url+ (light_07_state ? "turnOn":"turnOff"));
+  httpRequest(Light_08_switch_url+ (light_08_state ? "turnOn":"turnOff"));
+  httpRequest(Light_09_switch_url+ (light_09_state ? "turnOn":"turnOff"));
+  httpRequest(Light_10_switch_url+ (light_10_state ? "turnOn":"turnOff"));
+  httpRequest(Light_11_switch_url+ (light_11_state ? "turnOn":"turnOff"));
+  httpRequest(Light_12_switch_url+ (light_12_state ? "turnOn":"turnOff"));
+  httpRequest(Light_13_switch_url+ (light_13_state ? "turnOn":"turnOff"));
+  httpRequest(Light_14_switch_url+ (light_14_state ? "turnOn":"turnOff"));
   
 }
 
@@ -482,85 +511,85 @@ void loop() {
         light_01_state = !light_01_state;
         btn_01_state_prev = btn_01_state;
         digitalWrite(light_01, light_01_state);
-        if (!debug_state) client.publish("home/Light/01", light_01_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_01_switch_url+ (light_01_state ? "turnOn":"turnOff"));
       }
       if (btn_02_state != btn_02_state_prev) {
         light_02_state = !light_02_state;
         btn_02_state_prev = btn_02_state;
         digitalWrite(light_02, light_02_state);
-        if (!debug_state) client.publish("home/Light/02", light_02_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_02_switch_url+ (light_02_state ? "turnOn":"turnOff"));
       }
       if (btn_03_state != btn_03_state_prev) {
         light_03_state = !light_03_state;
         btn_03_state_prev = btn_03_state;
         digitalWrite(light_03, light_03_state);
-        if (!debug_state) client.publish("home/Light/03", light_03_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_03_switch_url+ (light_03_state ? "turnOn":"turnOff"));
       }
       if (btn_04_state != btn_04_state_prev) {
         light_04_state = !light_04_state;
         btn_04_state_prev = btn_04_state;
         digitalWrite(light_04, light_04_state);
-        if (!debug_state) client.publish("home/Light/04", light_04_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_04_switch_url+ (light_04_state ? "turnOn":"turnOff"));
       }
       if (btn_05_state != btn_05_state_prev) {
         light_05_state = !light_05_state;
         btn_05_state_prev = btn_05_state;
         digitalWrite(light_05, light_05_state);
-        if (!debug_state) client.publish("home/Light/05", light_05_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_05_switch_url+ (light_05_state ? "turnOn":"turnOff"));
       }
       if (btn_06_state != btn_06_state_prev) {
         light_06_state = !light_06_state;
         btn_06_state_prev = btn_06_state;
         digitalWrite(light_06, light_06_state);
-        if (!debug_state) client.publish("home/Light/06", light_06_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_06_switch_url+ (light_06_state ? "turnOn":"turnOff"));
       }
       if (btn_07_state != btn_07_state_prev) {
         light_07_state = !light_07_state;
         btn_07_state_prev = btn_07_state;
         digitalWrite(light_07, light_07_state);
-        if (!debug_state) client.publish("home/Light/07", light_07_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_07_switch_url+ (light_07_state ? "turnOn":"turnOff"));
       }
       if (btn_08_state != btn_08_state_prev) {
         light_08_state = !light_08_state;
         btn_08_state_prev = btn_08_state;
         digitalWrite(light_08, light_08_state);
-        if (!debug_state) client.publish("home/Light/08", light_08_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_08_switch_url+ (light_08_state ? "turnOn":"turnOff"));
       }
       if (btn_09_state != btn_09_state_prev) {
         light_09_state = !light_09_state;
         btn_09_state_prev = btn_09_state;
         digitalWrite(light_09, light_09_state);
-        if (!debug_state) client.publish("home/Light/09", light_09_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_09_switch_url+ (light_09_state ? "turnOn":"turnOff"));
       }
       if (btn_10_state != btn_10_state_prev) {
         light_10_state = !light_10_state;
         btn_10_state_prev = btn_10_state;
         digitalWrite(light_10, light_10_state);
-        if (!debug_state) client.publish("home/Light/10", light_10_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_10_switch_url+ (light_10_state ? "turnOn":"turnOff"));
       }
       if (btn_11_state != btn_11_state_prev) {
         light_11_state = !light_11_state;
         btn_11_state_prev = btn_11_state;
         digitalWrite(light_11, light_11_state);
-        if (!debug_state) client.publish("home/Light/11", light_11_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_11_switch_url+ (light_11_state ? "turnOn":"turnOff"));
       }
       if (btn_12_state != btn_12_state_prev) {
         light_12_state = !light_12_state;
         btn_12_state_prev = btn_12_state;
         digitalWrite(light_12, light_12_state);
-        if (!debug_state) client.publish("home/Light/12", light_12_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_12_switch_url+ (light_12_state ? "turnOn":"turnOff"));
       }
       if (btn_13_state != btn_13_state_prev) {
         light_13_state = !light_13_state;
         btn_13_state_prev = btn_13_state;
         digitalWrite(light_13, light_13_state);
-        if (!debug_state) client.publish("home/Light/13", light_13_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_13_switch_url+ (light_13_state ? "turnOn":"turnOff"));
       }
       if (btn_14_state != btn_14_state_prev) {
         light_14_state = !light_14_state;
         btn_14_state_prev = btn_14_state;
         digitalWrite(light_14, light_14_state);
-        if (!debug_state) client.publish("home/Light/14", light_14_state ? "1":"0");
+        if (!debug_state) httpRequest(Light_14_switch_url+ (light_14_state ? "turnOn":"turnOff"));
       }
 
   }
