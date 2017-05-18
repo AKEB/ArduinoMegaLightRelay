@@ -113,6 +113,8 @@ int btn_14_state_prev = 0;
 unsigned long last_millis_btn = 0;
 unsigned long last_millis_reconnect = 0;
 unsigned long last_millis_check = 0;
+unsigned long last_millis_send_status = 0;
+
 
 // Текущее кол-во попыток связаться с сервером
 int check_cnt = 0;
@@ -286,6 +288,52 @@ void httpRequest(String url) {
   } else {
     debug_log("connection failed");
   }
+  
+}
+
+//Отправляем статусы ламп на сервер MQTT
+void sendStatusLights() {
+  debug_log("sendStatusLights");
+  // Проверяем сеть
+  check_net();
+
+  digitalWrite(light_01, light_01_state);
+  digitalWrite(light_02, light_02_state);
+  digitalWrite(light_03, light_03_state);
+  digitalWrite(light_04, light_04_state);
+  digitalWrite(light_05, light_05_state);
+  digitalWrite(light_06, light_06_state);
+  digitalWrite(light_07, light_07_state);
+  digitalWrite(light_08, light_08_state);
+  digitalWrite(light_09, light_09_state);
+  digitalWrite(light_10, light_10_state);
+  digitalWrite(light_11, light_11_state);
+  digitalWrite(light_12, light_12_state);
+  digitalWrite(light_13, light_13_state);
+  digitalWrite(light_14, light_14_state);
+  
+  
+  // Проверяем режим Debug
+  if (debug_state) {
+    debug_log("net not available");
+    return;
+  }
+
+  client.publish("home/Light/01", (char *)light_01_state);
+  client.publish("home/Light/02", (char *)light_02_state);
+  client.publish("home/Light/03", (char *)light_03_state);
+  client.publish("home/Light/04", (char *)light_04_state);
+  client.publish("home/Light/05", (char *)light_05_state);
+  client.publish("home/Light/06", (char *)light_06_state);
+  client.publish("home/Light/07", (char *)light_07_state);
+  client.publish("home/Light/08", (char *)light_08_state);
+  client.publish("home/Light/09", (char *)light_09_state);
+  client.publish("home/Light/10", (char *)light_10_state);
+  client.publish("home/Light/11", (char *)light_11_state);
+  client.publish("home/Light/12", (char *)light_12_state);
+  client.publish("home/Light/13", (char *)light_13_state);
+  client.publish("home/Light/14", (char *)light_14_state);
+  
   
 }
 
@@ -609,7 +657,14 @@ void loop() {
     }
     
   }
-
+  
+  //Отправляем статусы лам на MQTT Server
+  if (millis() - last_millis_send_status > 5000) {
+    last_millis_send_status = millis();
+    sendStatusLights();
+  }
+  
+  
   // Проверяем коннект к серверу MQTT раз в 5 секунд
   if (millis() - last_millis_reconnect > 5000) {
     last_millis_reconnect = millis();
