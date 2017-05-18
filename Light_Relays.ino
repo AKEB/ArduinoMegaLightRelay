@@ -244,24 +244,23 @@ void sendStatusLights() {
   // Проверяем сеть
   check_net();
 
+  digitalWrite(light_01, light_01_state);
+  digitalWrite(light_02, light_02_state);
+  digitalWrite(light_03, light_03_state);
+  digitalWrite(light_04, light_04_state);
+  digitalWrite(light_05, light_05_state);
+  digitalWrite(light_06, light_06_state);
+  digitalWrite(light_07, light_07_state);
+  digitalWrite(light_08, light_08_state);
+  digitalWrite(light_09, light_09_state);
+  digitalWrite(light_10, light_10_state);
+  digitalWrite(light_11, light_11_state);
+  digitalWrite(light_12, light_12_state);
+  digitalWrite(light_13, light_13_state);
+  digitalWrite(light_14, light_14_state);
 
 // Проверяем режим Debug
   if (debug_state) {
-    digitalWrite(light_01, light_01_state);
-    digitalWrite(light_02, light_02_state);
-    digitalWrite(light_03, light_03_state);
-    digitalWrite(light_04, light_04_state);
-    digitalWrite(light_05, light_05_state);
-    digitalWrite(light_06, light_06_state);
-    digitalWrite(light_07, light_07_state);
-    digitalWrite(light_08, light_08_state);
-    digitalWrite(light_09, light_09_state);
-    digitalWrite(light_10, light_10_state);
-    digitalWrite(light_11, light_11_state);
-    digitalWrite(light_12, light_12_state);
-    digitalWrite(light_13, light_13_state);
-    digitalWrite(light_14, light_14_state);
-    
     debug_log("net not available");
     return;
   }
@@ -506,8 +505,8 @@ void loop() {
     int btn_14_state = digitalRead(btn_14);
 
     // Если включен режим DEBUG то переключаем свет без СЕТИ
-    if (debug_state) {
-      debug_log("BTN debug_state=1");
+   // if (debug_state) {
+   //   debug_log("BTN debug_state=1");
       if (btn_01_state != btn_01_state_prev) {
         light_01_state = !light_01_state;
         btn_01_state_prev = btn_01_state;
@@ -566,7 +565,7 @@ void loop() {
       }
 
       sendStatusLights();
-      
+/*      
     } else {
       // Сеть есть и дебаг режим выключен
       debug_log("BTN debug_state=0");
@@ -627,11 +626,11 @@ void loop() {
         httpRequest(Light_14_switch_url);
       }
     }
-    
+*/    
   }
   
   //Отправляем статусы лам на MQTT Server
-  if (millis() - last_millis_send_status > 5000) {
+  if (millis() - last_millis_send_status > 30000) {
     last_millis_send_status = millis();
     sendStatusLights();
   }
