@@ -244,28 +244,28 @@ void sendStatusLights() {
   // Проверяем сеть
   check_net();
 
-  digitalWrite(light_01, light_01_state);
-  digitalWrite(light_02, light_02_state);
-  digitalWrite(light_03, light_03_state);
-  digitalWrite(light_04, light_04_state);
-  digitalWrite(light_05, light_05_state);
-  digitalWrite(light_06, light_06_state);
-  digitalWrite(light_07, light_07_state);
-  digitalWrite(light_08, light_08_state);
-  digitalWrite(light_09, light_09_state);
-  digitalWrite(light_10, light_10_state);
-  digitalWrite(light_11, light_11_state);
-  digitalWrite(light_12, light_12_state);
-  digitalWrite(light_13, light_13_state);
-  digitalWrite(light_14, light_14_state);
-  
-  
-  // Проверяем режим Debug
+
+// Проверяем режим Debug
   if (debug_state) {
+    digitalWrite(light_01, light_01_state);
+    digitalWrite(light_02, light_02_state);
+    digitalWrite(light_03, light_03_state);
+    digitalWrite(light_04, light_04_state);
+    digitalWrite(light_05, light_05_state);
+    digitalWrite(light_06, light_06_state);
+    digitalWrite(light_07, light_07_state);
+    digitalWrite(light_08, light_08_state);
+    digitalWrite(light_09, light_09_state);
+    digitalWrite(light_10, light_10_state);
+    digitalWrite(light_11, light_11_state);
+    digitalWrite(light_12, light_12_state);
+    digitalWrite(light_13, light_13_state);
+    digitalWrite(light_14, light_14_state);
+    
     debug_log("net not available");
     return;
   }
-
+  
   client.publish("home/Light/01", (char *)light_01_state);
   client.publish("home/Light/02", (char *)light_02_state);
   client.publish("home/Light/03", (char *)light_03_state);
@@ -511,87 +511,62 @@ void loop() {
       if (btn_01_state != btn_01_state_prev) {
         light_01_state = !light_01_state;
         btn_01_state_prev = btn_01_state;
-        digitalWrite(light_01, light_01_state);
-        client.publish("home/Light/01", (char *)light_01_state);
       }
       if (btn_02_state != btn_02_state_prev) {
         light_02_state = !light_02_state;
         btn_02_state_prev = btn_02_state;
-        digitalWrite(light_02, light_02_state);
-        client.publish("home/Light/02", (char *)light_02_state);
       }
       if (btn_03_state != btn_03_state_prev) {
         light_03_state = !light_03_state;
         btn_03_state_prev = btn_03_state;
-        digitalWrite(light_03, light_03_state);
-        client.publish("home/Light/03", (char *)light_03_state);
       }
       if (btn_04_state != btn_04_state_prev) {
         light_04_state = !light_04_state;
         btn_04_state_prev = btn_04_state;
-        digitalWrite(light_04, light_04_state);
-        client.publish("home/Light/04", (char *)light_04_state);
       }
       if (btn_05_state != btn_05_state_prev) {
         light_05_state = !light_05_state;
         btn_05_state_prev = btn_05_state;
-        digitalWrite(light_05, light_05_state);
-        client.publish("home/Light/05", (char *)light_05_state);
       }
       if (btn_06_state != btn_06_state_prev) {
         light_06_state = !light_06_state;
         btn_06_state_prev = btn_06_state;
-        digitalWrite(light_06, light_06_state);
-        client.publish("home/Light/06", (char *)light_06_state);
       }
       if (btn_07_state != btn_07_state_prev) {
         light_07_state = !light_07_state;
         btn_07_state_prev = btn_07_state;
-        digitalWrite(light_07, light_07_state);
-        client.publish("home/Light/07", (char *)light_07_state);
       }
       if (btn_08_state != btn_08_state_prev) {
         light_08_state = !light_08_state;
         btn_08_state_prev = btn_08_state;
-        digitalWrite(light_08, light_08_state);
-        client.publish("home/Light/08", (char *)light_08_state);
       }
       if (btn_09_state != btn_09_state_prev) {
         light_09_state = !light_09_state;
         btn_09_state_prev = btn_09_state;
-        digitalWrite(light_09, light_09_state);
-        client.publish("home/Light/09", (char *)light_09_state);
       }
       if (btn_10_state != btn_10_state_prev) {
         light_10_state = !light_10_state;
         btn_10_state_prev = btn_10_state;
-        digitalWrite(light_10, light_10_state);
-        client.publish("home/Light/10", (char *)light_10_state);
       }
       if (btn_11_state != btn_11_state_prev) {
         light_11_state = !light_11_state;
         btn_11_state_prev = btn_11_state;
-        digitalWrite(light_11, light_11_state);
-        client.publish("home/Light/11", (char *)light_11_state);
       }
       if (btn_12_state != btn_12_state_prev) {
         light_12_state = !light_12_state;
         btn_12_state_prev = btn_12_state;
-        digitalWrite(light_12, light_12_state);
-        client.publish("home/Light/12", (char *)light_12_state);
       }
       if (btn_13_state != btn_13_state_prev) {
         light_13_state = !light_13_state;
         btn_13_state_prev = btn_13_state;
-        digitalWrite(light_13, light_13_state);
-        client.publish("home/Light/13", (char *)light_13_state);
       }
       if (btn_14_state != btn_14_state_prev) {
         light_14_state = !light_14_state;
         btn_14_state_prev = btn_14_state;
-        digitalWrite(light_14, light_14_state);
-        client.publish("home/Light/14", (char *)light_14_state);
       }
+
+      sendStatusLights();
+      
     } else {
       // Сеть есть и дебаг режим выключен
       debug_log("BTN debug_state=0");
