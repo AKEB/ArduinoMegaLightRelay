@@ -1,3 +1,4 @@
+#include <SPI.h>
 #include <Ethernet.h>
 #include <utility/w5100.h>
 #include <PubSubClient.h>
