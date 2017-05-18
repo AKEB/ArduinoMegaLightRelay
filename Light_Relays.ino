@@ -6,7 +6,7 @@
 #include <EEPROM.h>
 
 // Включить Вывод в консоль
-#define DEBUG_LEVEL 0
+#define DEBUG_LEVEL 1
 // Порт для подключения по Telnet к Arduino, для просмотра логов Бля просмотра логов
 #define DEBUG_SERVER_PORT 8000
 // ПИН на который нужно подать питание при необходимости отключиться от сети!
