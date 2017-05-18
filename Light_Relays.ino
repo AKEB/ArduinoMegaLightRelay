@@ -412,7 +412,9 @@ void setup() {
   pinMode(btn_13, INPUT);
   pinMode(btn_14, INPUT);
 
-  connect_mqtt();  
+  connect_mqtt();
+
+  sendStatusLights();
 }
 
 
@@ -563,13 +565,13 @@ void loop() {
       }
 
   }
-  
+  /*
   //Отправляем статусы лам на MQTT Server
   if (millis() - last_millis_send_status > 15000) {
     last_millis_send_status = millis();
     sendStatusLights();
   }
-  
+  */
   
   // Проверяем коннект к серверу MQTT раз в 5 секунд
   if (millis() - last_millis_reconnect > 5000) {
