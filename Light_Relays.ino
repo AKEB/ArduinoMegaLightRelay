@@ -1,13 +1,10 @@
 #include <Ethernet.h>
 #include <utility/w5100.h>
 #include <PubSubClient.h>
-#include <SPI.h>
-#include <stdarg.h>
-#include <EEPROM.h>
 
 // Включить Вывод в консоль
 #define DEBUG_LEVEL 1
-// Порт для подключения по Telnet к Arduino, для просмотра логов Бля просмотра логов
+// Порт для подключения по Telnet к Arduino, для просмотра логов для просмотра логов
 #define DEBUG_SERVER_PORT 8000
 // ПИН на который нужно подать питание при необходимости отключиться от сети!
 #define DEBUG_PIN 14
@@ -184,8 +181,8 @@ void check_net() {
 }
 
 // Функция подключения к MQTT серверу
-void connect() {
-  debug_log("connect function");
+void connect_mqtt() {
+  debug_log("connect_mqtt function");
   // Проверяем сеть
   check_net();
 
@@ -443,7 +440,7 @@ void setup() {
   pinMode(btn_13, INPUT);
   pinMode(btn_14, INPUT);
 
-  connect();  
+  connect_mqtt();  
 }
 
 
@@ -670,7 +667,7 @@ void loop() {
     last_millis_reconnect = millis();
     
     if (!debug_state && !client.connected()) {
-      connect();
+      connect_mqtt();
     }
   }
 
