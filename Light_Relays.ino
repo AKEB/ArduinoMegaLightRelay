@@ -280,6 +280,43 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
+struct port_param_t {String name;int value;};
+
+#define MAX_PARAMS 10
+
+port_param_t params[MAX_PARAMS];
+
+int strtoint(String str) // Процедура переобразования строки в число
+{
+  int tempInt;
+  char rez[str.length()+1];
+  str.toCharArray(rez, sizeof(rez));
+  tempInt = atoi(rez);
+  return tempInt;
+}
+
+
+
+void parseParams(char* inputString){
+  
+  int parsedParams=0; // пока ничего не напарсили
+ char* buffer=strtok(inputString,"?"); // лучше так проверять/пропускать вопросилово
+ 
+  if(buffer!=NULL){
+    for(buffer=strtok(NULL,"&"); buffer!=NULL;     buffer=strtok(NULL,"&") ) 
+    {
+  String buffer1= String(buffer);
+    params[parsedParams].name= buffer1.substring(0,buffer1.indexOf('='));   //достаем имя
+    params[parsedParams].value=(buffer1.substring(buffer1.indexOf('=')+1)).toInt(); //достаем значение в integer
+  
+    parsedParams++; // отмечаем сколько удалось распарсить
+     }
+         if(parsedParams>MAX_PARAMS-1)return; // больше нет места куда сохранять парсенное.
+     } 
+  
+}
+
+
 void setup() {
   Serial.begin(9600);
   Ethernet.begin(mac, ip);
@@ -321,6 +358,7 @@ void setup() {
   delay(2000);
   
   connect_mqtt();
+
 }
 
 void loop() {
@@ -338,7 +376,7 @@ void loop() {
       c_water_state = state;
       if (c_water_state == LOW) {
         ++c_water;
-       
+       if (!debug_state) client.publish("home/water/int1",String(c_water).c_str());
       }
     }
     state = digitalRead(h_water_pin);
@@ -346,7 +384,7 @@ void loop() {
       h_water_state = state;
       if (h_water_state == LOW) {
         ++h_water;
-      
+        if (!debug_state) client.publish("home/water/int1",String(h_water).c_str());
       }
     }
     state = digitalRead(w_water_pin);
@@ -354,6 +392,7 @@ void loop() {
       w_water_state = state;
       if (w_water_state == LOW) {
         ++w_water;
+        if (!debug_state) client.publish("home/water/int3",String(w_water).c_str());
         debug_log("WARNING: ЗАТОПЛЕНИЕ! КРАНЫ ПЕРЕКРЫТЫ!");
       }
     }
@@ -407,65 +446,103 @@ void loop() {
     debug_log("new client_http");
     // HTTP-запрос заканчивается пустой линией
     boolean currentLineIsBlank = true;
+    readString = "";
     while (client_http.connected()) {
       if (client_http.available()) {
         char c = client_http.read();
         readString += c;
-        Serial.write(c);
+        //Serial.write(c);
         // если добрались до конца строки (т.е. получили символ новой строки),
         // и эта строка – пустая, это значит, что это конец HTTP-запроса.
         // то есть, можно приступать к отправке ответа:
         if (c == '\n' && currentLineIsBlank) {
           Serial.println(readString);
-          
-          if (readString.lastIndexOf("GET /setWater")>-1) {
+
+          if (readString.lastIndexOf("GET /favicon.ico")>-1) {
+            client_http.println("HTTP/1.1 404 Not Found");
+            client_http.println("Content-Type: text/html");
+            client_http.println("Connection: close");
+            client_http.println();
+            client_http.println("<html><head><title>Arduino Web Server - Error 404</title></head><body><h1>Error 404: Sorry, that page cannot be found!</h1></body></html>");
+            client_http.stop();
+            break;
+          } else if (readString.lastIndexOf("GET /setWater")>-1) {
+            parseParams(readString.c_str());
+            Serial.println(params[0].name);
+            Serial.println(params[0].value);
+            Serial.println(params[1].name);
+            Serial.println(params[1].value);
+
             client_http.println("HTTP/1.1 200 OK");
             client_http.println("Content-Type: text/html");
             client_http.println("Connection: close");
+
+            client_http.println();
             client_http.println("<!DOCTYPE HTML>");
-            client_http.println("<html><head></head><body>OK</body></html>");
+            
+            if ((params[0].name).equals("int") && (params[1].name).equals("set")) {
+              if (params[0].value == 1) {
+                c_water = params[1].value;
+                if (!debug_state) client.publish("home/water/int1",String(c_water).c_str());
+                client_http.println("<html><head></head><body>OK</body></html>");
+              } else if (params[0].value == 2) {
+                h_water = params[1].value;
+                if (!debug_state) client.publish("home/water/int2",String(h_water).c_str());
+                client_http.println("<html><head></head><body>OK</body></html>");
+              } else if (params[0].value == 3) {
+                w_water = params[1].value;
+                if (!debug_state) client.publish("home/water/int3",String(w_water).c_str());
+                client_http.println("<html><head></head><body>OK</body></html>");
+              } else {
+                client_http.println("<html><head></head><body>ERROR</body></html>");
+              }
+            } else {
+              client_http.println("<html><head></head><body>ERROR</body></html>");
+            }
+            
+            client_http.stop();
+            break;
+          } else {
+            // отсылаем стандартный заголовок для HTTP-ответа:
+            client_http.println("HTTP/1.1 200 OK");
+            client_http.println("Content-Type: text/html");
+            // после выполнения ответа соединение будет разорвано
+            client_http.println("Connection: close");
+            // автоматически обновляем страницу каждую 1 секунду
+            client_http.println("Refresh: 10");
+            client_http.println();
+            client_http.println("<!DOCTYPE HTML>");
+            client_http.println("<html>");
+            client_http.println("<head>");
+            //client_http.println("<meta http-equiv=\"refresh\" content=\"1\">");
+            client_http.println("<meta charset=\"UTF-8\">");
+            client_http.println("<title></title>");
+            client_http.println("<style>.b {font-weight: bold;} .r {font-weight: bold; color:red;} .g {font-weight: bold; color:green;} table td {padding:4px 12px; text-align:right;}</style>");
+            client_http.println("</head>");
+            
+            client_http.println("<body>");
+            client_http.print(uptime());
+            client_http.println("<br />");
+            client_http.println("Debug State: " + String(debug_state ? "<span class=\"r\">True</span>" : "<span class=\"g\">False</span>")+"<br />");
+            client_http.println("<br />");
+            client_http.println("<table cellpadding=0 cellspacing=0 border=1>");
+            for (int i = 0; i < 14; ++i) {
+              client_http.print("<tr><td>Button <span class=\"b\">" + String(i+1) + "</span> pin["+String(btn[i])+"] State: " + String(btn_state_prev[i] ? "<span class=\"g\">On</span>" : "<span class=\"r\">Off</span>") + "</td> ");
+              client_http.println("<td>Light <span class=\"b\">" + String(i+1) + "</span> pin["+String(light[i])+"] State: " + String(light_state[i] ? "<span class=\"g\">On</span>" : "<span class=\"r\">Off</span>") + "</td></tr>");
+            }
+            client_http.println("</table>");
+
+            client_http.println("<br />");
+            client_http.println("<table cellpadding=0 cellspacing=0 border=1>");
+            client_http.println("<tr><td>ХВС</td><td title=\"/setWater?int=1&set=6311\">"+String(c_water)+"</td></tr>");
+            client_http.println("<tr><td>ГВС</td><td title=\"/setWater?int=2&set=6300\">"+String(h_water)+"</td></tr>");
+            client_http.println("<tr><td>WAR</td><td>"+String(w_water)+"</td></tr>");
+            client_http.println("</table>");
+          
+            client_http.println("</body></html>");
+            client_http.stop();
             break;
           }
-          
-          // отсылаем стандартный заголовок для HTTP-ответа:
-          client_http.println("HTTP/1.1 200 OK");
-          client_http.println("Content-Type: text/html");
-          // после выполнения ответа соединение будет разорвано
-          client_http.println("Connection: close");
-          // автоматически обновляем страницу каждую 1 секунду
-          client_http.println("Refresh: 1");
-          client_http.println();
-          client_http.println("<!DOCTYPE HTML>");
-          client_http.println("<html>");
-          client_http.println("<head>");
-          client_http.println("<meta http-equiv=\"refresh\" content=\"1\">");
-          client_http.println("<meta charset=\"UTF-8\">");
-          client_http.println("<title></title>");
-          client_http.println("<style>.b {font-weight: bold;} .r {font-weight: bold; color:red;} .g {font-weight: bold; color:green;} table td {padding:4px 12px; text-align:right;}</style>");
-          client_http.println("</head>");
-          
-          client_http.println("<body>");
-          client_http.print(uptime());
-          client_http.println("<br />");
-          client_http.println("Debug State: " + String(debug_state ? "<span class=\"r\">True</span>" : "<span class=\"g\">False</span>")+"<br />");
-          client_http.println("<br />");
-          client_http.println("<table>");
-          for (int i = 0; i < 14; ++i) {
-            client_http.print("<tr><td>Button <span class=\"b\">" + String(i+1) + "</span> pin["+String(btn[i])+"] State: " + String(btn_state_prev[i] ? "<span class=\"g\">On</span>" : "<span class=\"r\">Off</span>") + "</td> ");
-            client_http.println("<td>Light <span class=\"b\">" + String(i+1) + "</span> pin["+String(light[i])+"] State: " + String(light_state[i] ? "<span class=\"g\">On</span>" : "<span class=\"r\">Off</span>") + "</td></tr>");
-          }
-          client_http.println("</table>");
-
-          client_http.println("<br />");
-          client_http.println("<table>");
-          client_http.println("<tr><td>ХВС</td><td>"+String(c_water)+"</td></tr>");
-          client_http.println("<tr><td>ГВС</td><td>"+String(h_water)+"</td></tr>");
-          client_http.println("<tr><td>WAR</td><td>"+String(w_water)+"</td></tr>");
-          client_http.println("</table>");
-          
-          client_http.println("</body></html>");
-          
-          break;
         }
         if (c == '\n') {
           // начинаем новую строку
