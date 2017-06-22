@@ -11,7 +11,6 @@
 #include <utility/w5100.h>
 #include <PubSubClient.h>
 #include <EasyWebServer.h>
-#include <EthernetUdp.h>
 
 // Включить Вывод в консоль
 #define DEBUG_LEVEL 1
@@ -40,8 +39,8 @@ char Server_IP[14] = "192.168.1.200";
 const int Server_PORT = 80;
 
 // Скрипты для переключения светильников, список взят из MajorDomo
-const String Light_switch_url[] = {"/objects/?object=Light_01&op=m&m=switch&", "/objects/?object=Light_02&op=m&m=switch&", "/objects/?object=Light_03&op=m&m=switch&", "/objects/?object=Light_04&op=m&m=switch&", "/objects/?object=Light_05&op=m&m=switch&", "/objects/?object=Light_06&op=m&m=switch&", "/objects/?object=Light_07&op=m&m=switch&", 
-                                   "/objects/?object=Light_08&op=m&m=switch&", "/objects/?object=Light_09&op=m&m=switch&", "/objects/?object=Light_10&op=m&m=switch&", "/objects/?object=Light_11&op=m&m=switch&", "/objects/?object=Light_12&op=m&m=switch&", "/objects/?object=Light_13&op=m&m=switch&", "/objects/?object=Light_14&op=m&m=switch&"};
+const String Light_switch_url[] = {"/objects/?object=Light_01&op=m&m=", "/objects/?object=Light_02&op=m&m=", "/objects/?object=Light_03&op=m&m=", "/objects/?object=Light_04&op=m&m=", "/objects/?object=Light_05&op=m&m=", "/objects/?object=Light_06&op=m&m=", "/objects/?object=Light_07&op=m&m=", 
+                                   "/objects/?object=Light_08&op=m&m=", "/objects/?object=Light_09&op=m&m=", "/objects/?object=Light_10&op=m&m=", "/objects/?object=Light_11&op=m&m=", "/objects/?object=Light_12&op=m&m=", "/objects/?object=Light_13&op=m&m=", "/objects/?object=Light_14&op=m&m="};
 
 // Пины для Вывода на РЕЛЕ
 const int light[] = {23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49};
@@ -71,14 +70,6 @@ int debug_state = 0;
 
 EthernetClient net;
 EthernetClient mqtt_net;
-
-// An EthernetUDP instance to let us send and receive packets over UDP
-EthernetUDP Udp;
-unsigned int localPort = 8888;      // local port to listen on
-// buffers for receiving and sending data
-char packetBuffer[UDP_TX_PACKET_MAX_SIZE];  //buffer to hold incoming packet,
-char  ReplyBuffer[] = "acknowledged";       // a string to send back
-
 
 EthernetServer TelnetServer(DEBUG_SERVER_PORT);
 EthernetServer server_http(80);
@@ -112,9 +103,6 @@ void setup() {
 	debug_log("Telnet_setup");
 	Telnet_setup();
 
-	debug_log("SSDP_setup");
-	SSDP_setup();
-	
 	debug_log("WebServer_setup");
 	WebServer_setup();
 	
@@ -138,8 +126,6 @@ void setup() {
 void loop() {
 	Time_loop();
 
-	SSDP_loop();
-	
 	Buttons_loop();
 	
 	Lights_loop();

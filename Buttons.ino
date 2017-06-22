@@ -21,7 +21,7 @@ void Buttons_loop() {
 				light_state[i] = !light_state[i];
 				btn_state_prev[i] = btn_state[i];
 				digitalWrite(light[i], light_state[i]);
-				if (!debug_state) Network_httpRequest(Light_switch_url[i] + (light_state[i] ? "turnOn":"turnOff"));
+				if (!debug_state) Network_httpRequest(Light_switch_url[i] + "switch&" + (light_state[i] ? "turnOn":"turnOff"));
 			}
 			
 		}

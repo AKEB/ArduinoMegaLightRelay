@@ -8,7 +8,8 @@ void Lights_loop() {
 	//Отправляем статусы ламп на MQTT Server
 	if (!debug_state && last_millis_send_status < 1) {
 		last_millis_send_status = currentMillis;
-		sendStatusLights();
+		//sendStatusLights();
+		Lights_RefreshStatus();
 	} else if (debug_state) {
 		last_millis_send_status = 0;
 	}
@@ -33,7 +34,14 @@ void sendStatusLights() {
 	}
 	
 	for(int i=0; i<14; i++) {
-		Network_httpRequest(Light_switch_url[i] + (light_state[i] ? "turnOn":"turnOff"));
+		Network_httpRequest(Light_switch_url[i] + "switch&" + (light_state[i] ? "turnOn":"turnOff"));
 	}
 	
 }
+
+void Lights_RefreshStatus() {
+	for(int i=0; i<14; i++) {
+		Network_httpRequest(Light_switch_url[i] + "Refresh");
+	}
+}
+
