@@ -18,8 +18,13 @@
 // Порт для подключения по Telnet к Arduino, для просмотра логов
 #define DEBUG_SERVER_PORT 23
 
-// ПИН на который нужно подать питание при необходимости отключиться от сети!
+// ПИН на который нужно подать GND при необходимости отключиться от сети!
 #define DEBUG_PIN 14
+
+// ПИН для Счетчика электроэнергии
+#define POWER_PIN 15
+// ПИН для Счетчика электроэнергии
+#define POWER_LED_PIN 13
 
 // Кол-во попыток связаться с сервером, после чего система перейдет в Дебаг режим (Без сети)
 #define SERVER_CONNECT_MAX_COUNT 5
@@ -37,6 +42,8 @@ IPAddress ip(192,168,1,100);
 // IP адрес сервера MajorDomo куда надо посылать команду на переключение света, при назатии на выключатель
 char Server_IP[14] = "192.168.1.200";
 const int Server_PORT = 80;
+
+const String Power_url = "/objects/?script=ElectroCounter";
 
 // Скрипты для переключения светильников, список взят из MajorDomo
 const String Light_switch_url[] = {"/objects/?object=Light_01&op=m&m=", "/objects/?object=Light_02&op=m&m=", "/objects/?object=Light_03&op=m&m=", "/objects/?object=Light_04&op=m&m=", "/objects/?object=Light_05&op=m&m=", "/objects/?object=Light_06&op=m&m=", "/objects/?object=Light_07&op=m&m=", 
@@ -84,6 +91,8 @@ String readString;
 int HighMillis=0;
 int Rollover=0;
 
+int lastPowerState = 0;
+
 struct port_param_t {String name;int value;};
 
 #define MAX_PARAMS 10
@@ -94,6 +103,8 @@ unsigned long currentMillis = millis();
 
 void setup() {
 	Serial.begin(9600);
+
+	Power_setup();
 	
 	Time_setup();
 	
@@ -135,5 +146,6 @@ void loop() {
 	WebServer_loop();
 	
 	Telnet_loop();
-	
+
+	Power_loop();
 }
