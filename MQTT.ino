@@ -32,13 +32,13 @@ void MQTT_connect() {
 		return;
 	}
 	
-	debug_log("connecting ");
+	debug_log("MQTT connecting...");
 	
 	// Пытаемся подключиться
 	if (!MQTT_client.connected()) {
 		mqtt_net.stop();
-		if (!MQTT_client.connect(MQTT_CLIENT_ID)) {
-			debug_log("error");
+		if (!MQTT_client.connect(MQTT_CLIENT_ID, MQTT_USER, MQTT_PASSWORD)) {
+			debug_log("MQTT can't connect");
 			return;
 		}
 	}
