@@ -5,7 +5,7 @@ void Buttons_setup() {
 }
 
 void Buttons_loop() {
-	if (currentMillis - last_millis_btn > 500UL) {
+	if (currentMillis - last_millis_btn > 200UL) {
 		// Проверяем сеть
 		Network_check();
 		
@@ -19,9 +19,12 @@ void Buttons_loop() {
 			
 			if (btn_state[i] != btn_state_prev[i]) {
 				light_state[i] = !light_state[i];
+				
+				debug_log("Button["+String(i)+"] State New="+String(btn_state[i])+" Prev="+String(btn_state_prev[i])+" debug_state="+String(debug_state)+" light_state="+String(light_state[i]));
+				
 				btn_state_prev[i] = btn_state[i];
-				digitalWrite(light[i], light_state[i]);
-				if (!debug_state) Network_httpRequest(Light_switch_url[i] + "switch&" + (light_state[i] ? "turnOn":"turnOff"));
+				if (!debug_state) Network_httpRequest(Light_switch_url[i] + "switch&"));
+				else digitalWrite(light[i], light_state[i]);
 			}
 			
 		}

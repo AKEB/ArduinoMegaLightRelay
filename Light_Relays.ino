@@ -38,13 +38,15 @@ IPAddress ip(192,168,1,100);
 //IPAddress mqtt_server(192,168,1,200);
 #define MQTT_PORT       1883
 #define MQTT_CLIENT_ID  "lightshild"
-#define MQTT_USER       "akeb";
-#define MQTT_PASSWORD   "Akeb123Akeb";
+#define MQTT_USER       "akeb"
+#define MQTT_PASSWORD   "Akeb123Akeb"
 
 // IP адрес сервера MajorDomo куда надо посылать команду на переключение света, при назатии на выключатель
 char Server_IP[14] = "192.168.1.200";
 const int Server_PORT = 80;
 
+int Log_index=0; 
+String Logs[100];
 
 const String Power_url = "/objects/?script=ElectroCounter";
 

@@ -38,7 +38,7 @@ void MQTT_connect() {
 	if (!MQTT_client.connected()) {
 		mqtt_net.stop();
 		if (!MQTT_client.connect(MQTT_CLIENT_ID, MQTT_USER, MQTT_PASSWORD)) {
-			debug_log("MQTT can't connect");
+			debug_log("MQTT can not connect");
 			return;
 		}
 	}
@@ -52,12 +52,12 @@ void MQTT_connect() {
 
 //  Функция вызывается, когда есть изменения по топику на который мы подписаны!
 void callback(char* topic, byte* payload, unsigned int length) {
-	String topic_String = (String) topic;
-	String payload_String = (String)((char *)payload);
+	String topic_String = String(topic);
+	String payload_String = String((char *)payload);
 
 	payload_String = payload_String.substring(0,length);
 	
-	debug_log("incoming: "+topic_String+" - "+payload_String);
+	debug_log("MQTT incoming: "+topic_String+" - "+payload_String);
 	
 	topic_String.remove(0, 11);
 	int num = topic_String.toInt();

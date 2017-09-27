@@ -13,9 +13,9 @@ void Lights_loop() {
 	} else if (debug_state) {
 		last_millis_send_status = 0;
 	}
+
+	
 }
-
-
 
 //Отправляем статусы ламп на сервер MQTT
 void sendStatusLights() {
@@ -24,22 +24,13 @@ void sendStatusLights() {
 	Network_check();
 	
 	for(int i=0; i<14; i++) {
-		digitalWrite(light[i], light_state[i]);
+		if (!debug_state) Network_httpRequest(Light_switch_url[i] + (light_state[i] ? "turnOn":"turnOff"));
+		else digitalWrite(light[i], light_state[i]);
 	}
-	
-	// Проверяем режим Debug
-	if (debug_state) {
-		debug_log("net not available");
-		return;
-	}
-	
-	for(int i=0; i<14; i++) {
-		Network_httpRequest(Light_switch_url[i] + "switch&" + (light_state[i] ? "turnOn":"turnOff"));
-	}
-	
 }
 
 void Lights_RefreshStatus() {
+	debug_log("Lights_RefreshStatus");
 	for(int i=0; i<14; i++) {
 		Network_httpRequest(Light_switch_url[i] + "Refresh");
 	}

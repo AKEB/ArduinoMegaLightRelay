@@ -4,7 +4,7 @@ void Network_setup() {
 	W5100.setRetransmissionCount(3);
 
 	debug_log("My IP address: ");
-	debug_log(DisplayAddress(Ethernet.localIP()));
+	debug_log(String(DisplayAddress(Ethernet.localIP())));
 }
 
 // Преобразование IP Адреса
@@ -51,7 +51,7 @@ void Network_check() {
 
 // Отсылка данных по HTTP
 void Network_httpRequest(String url) {
-	debug_log("httpRequest "+ url);
+	//debug_log("httpRequest "+ url);
 	// Проверяем сеть
 	Network_check();
 	

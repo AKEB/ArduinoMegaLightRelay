@@ -7,7 +7,7 @@ void WebServer_loop() {
 	EthernetClient client_http = server_http.available();
 	if (client_http) {
 		// выводим сообщение о новом клиенте
-		debug_log("new client_http");
+		//debug_log("new client_http");
 		// HTTP-запрос заканчивается пустой линией
 		boolean currentLineIsBlank = true;
 		readString = "";
@@ -28,6 +28,31 @@ void WebServer_loop() {
 						client_http.println("Connection: close");
 						client_http.println();
 						client_http.println("<html><head><title>Arduino Web Server - Error 404</title></head><body><h1>Error 404: Sorry, that page cannot be found!</h1></body></html>");
+						client_http.stop();
+						break;
+					} else if (readString.lastIndexOf("logs.html")>-1) {
+						client_http.println("HTTP/1.1 200 OK");
+						client_http.println("Content-Type: text/html");
+						client_http.println("Connection: close");
+						client_http.println("Refresh: 5");
+						client_http.println();
+						client_http.println("<!DOCTYPE HTML>");
+						client_http.println("<html>");
+						client_http.println("<head>");
+						//client_http.println("<meta http-equiv=\"refresh\" content=\"5\">");
+						client_http.println("<meta charset=\"UTF-8\">");
+						client_http.println("<title></title>");
+						client_http.println("</head>");
+						client_http.println("<body>");
+						client_http.println("<font size=\"-1\">");
+						for (int i = Log_index; i < 100; ++i) {
+							client_http.println(String(i)+": " + Logs[i]+"<br />");
+						}
+						for (int i = 0; i < Log_index; ++i) {
+							client_http.println(String(i)+": " + Logs[i]+"<br />");
+						}
+						client_http.println("</font>");
+						client_http.println("</body></html>");
 						client_http.stop();
 						break;
 					} else if (readString.lastIndexOf("devdesc.xml")>-1) {
@@ -60,19 +85,17 @@ void WebServer_loop() {
 						client_http.print("</presentationURL>\r\n");   //BaseURL + /info is device homepage.
 						client_http.print("  </device>\r\n");
 						client_http.print("</root>\r\n");
+						break;
 					} else {
-						// отсылаем стандартный заголовок для HTTP-ответа:
 						client_http.println("HTTP/1.1 200 OK");
 						client_http.println("Content-Type: text/html");
-						// после выполнения ответа соединение будет разорвано
 						client_http.println("Connection: close");
-						// автоматически обновляем страницу каждую 1 секунду
 						client_http.println("Refresh: 10");
 						client_http.println();
 						client_http.println("<!DOCTYPE HTML>");
 						client_http.println("<html>");
 						client_http.println("<head>");
-						//client_http.println("<meta http-equiv=\"refresh\" content=\"1\">");
+						//client_http.println("<meta http-equiv=\"refresh\" content=\"10\">");
 						client_http.println("<meta charset=\"UTF-8\">");
 						client_http.println("<title></title>");
 						client_http.println("<style>.b {font-weight: bold;} .r {font-weight: bold; color:red;} .g {font-weight: bold; color:green;} table td {padding:4px 12px; text-align:right;}</style>");
@@ -89,7 +112,6 @@ void WebServer_loop() {
 							client_http.println("<td>Light <span class=\"b\">" + String(i+1) + "</span> pin["+String(light[i])+"] State: " + String(light_state[i] ? "<span class=\"g\">On</span>" : "<span class=\"r\">Off</span>") + "</td></tr>");
 						}
 						client_http.println("</table>");
-
 						client_http.println("</body></html>");
 						client_http.stop();
 						break;
