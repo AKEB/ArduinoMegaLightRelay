@@ -3,12 +3,6 @@ void debug_log(String str) {
 	if (DEBUG_LEVEL) {
 		Serial.println(str);
 	}
-	
-	Telnet_log(str);
-	
-	Logs[Log_index] = "[" + String(millis()/1000) + "] " + str;
-	Log_index++;
-	if (Log_index >=100) Log_index = 0;
 }
 
 void Telnet_setup() {
@@ -38,12 +32,6 @@ void Telnet_loop() {
 					client1.print("Hello, client number: ");
 					client1.print(i);
 					client1.println();
-					for (int i = Log_index; i < 100; ++i) {
-						client1.println(String(i)+": " + Logs[i]);
-					}
-					for (int i = 0; i < Log_index; ++i) {
-						client1.println(String(i)+": " + Logs[i]);
-					}
 					break;
 				}
 			}

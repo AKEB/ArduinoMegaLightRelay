@@ -64,6 +64,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
 	
 	if (num >=1 && num <=14) {
 		--num;
+		
+		light_state_switch[num] = 0;
+		
 		if (payload_String.equals("1")) {
 			light_state[num] = 1;
 		} else if(payload_String.equals("0")) {

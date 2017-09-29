@@ -23,9 +23,14 @@ void Buttons_loop() {
 				debug_log("Button["+String(i)+"] State New="+String(btn_state[i])+" Prev="+String(btn_state_prev[i])+" debug_state="+String(debug_state)+" light_state="+String(light_state[i]));
 				
 				btn_state_prev[i] = btn_state[i];
-				if (!debug_state) Network_httpRequest(Light_switch_url[i] + "switch&"));
-				else digitalWrite(light[i], light_state[i]);
+				if (!debug_state) {
+					light_state_switch[i] = 1;
+					Network_httpRequest(Light_switch_url[i] + "switch&");
+				} else digitalWrite(light[i], light_state[i]);
 			}
+			
+			
+			
 			
 		}
 		

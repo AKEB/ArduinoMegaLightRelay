@@ -30,31 +30,6 @@ void WebServer_loop() {
 						client_http.println("<html><head><title>Arduino Web Server - Error 404</title></head><body><h1>Error 404: Sorry, that page cannot be found!</h1></body></html>");
 						client_http.stop();
 						break;
-					} else if (readString.lastIndexOf("logs.html")>-1) {
-						client_http.println("HTTP/1.1 200 OK");
-						client_http.println("Content-Type: text/html");
-						client_http.println("Connection: close");
-						client_http.println("Refresh: 5");
-						client_http.println();
-						client_http.println("<!DOCTYPE HTML>");
-						client_http.println("<html>");
-						client_http.println("<head>");
-						//client_http.println("<meta http-equiv=\"refresh\" content=\"5\">");
-						client_http.println("<meta charset=\"UTF-8\">");
-						client_http.println("<title></title>");
-						client_http.println("</head>");
-						client_http.println("<body>");
-						client_http.println("<font size=\"-1\">");
-						for (int i = Log_index; i < 100; ++i) {
-							client_http.println(String(i)+": " + Logs[i]+"<br />");
-						}
-						for (int i = 0; i < Log_index; ++i) {
-							client_http.println(String(i)+": " + Logs[i]+"<br />");
-						}
-						client_http.println("</font>");
-						client_http.println("</body></html>");
-						client_http.stop();
-						break;
 					} else if (readString.lastIndexOf("devdesc.xml")>-1) {
 						client_http.println("HTTP/1.1 200 OK");
 						Serial.println("send device description");

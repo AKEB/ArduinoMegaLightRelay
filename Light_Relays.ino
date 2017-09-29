@@ -45,9 +45,6 @@ IPAddress ip(192,168,1,100);
 char Server_IP[14] = "192.168.1.200";
 const int Server_PORT = 80;
 
-int Log_index=0; 
-String Logs[100];
-
 const String Power_url = "/objects/?script=ElectroCounter";
 
 // Скрипты для переключения светильников, список взят из MajorDomo
@@ -63,6 +60,10 @@ const int btn[] =  {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48};
 // Состояние лампочек
 int light_state[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+// Состояние лампочек
+int light_state_switch[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+
 // Текущее состояние выключателей
 int btn_state_prev[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -71,6 +72,8 @@ unsigned long last_millis_btn = 0;
 unsigned long last_millis_reconnect = 0;
 unsigned long last_millis_check = 0;
 unsigned long last_millis_send_status = 0;
+
+unsigned long last_millis_resend_status = 0;
 
 // Текущее кол-во попыток связаться с сервером
 int check_cnt = 0;

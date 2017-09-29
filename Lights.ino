@@ -13,7 +13,13 @@ void Lights_loop() {
 	} else if (debug_state) {
 		last_millis_send_status = 0;
 	}
-
+	
+	
+	if (currentMillis - last_millis_resend_status > 500UL) {
+		last_millis_resend_status = currentMillis;
+		sendStatusLights();
+	}
+	
 	
 }
 
@@ -24,8 +30,13 @@ void sendStatusLights() {
 	Network_check();
 	
 	for(int i=0; i<14; i++) {
-		if (!debug_state) Network_httpRequest(Light_switch_url[i] + (light_state[i] ? "turnOn":"turnOff"));
-		else digitalWrite(light[i], light_state[i]);
+		if (!debug_state) {
+			if (light_state_switch[i] > 0) {
+				Network_httpRequest(Light_switch_url[i] + (light_state[i] ? "turnOn":"turnOff"));
+			}
+		} else {
+			digitalWrite(light[i], light_state[i]);
+		}
 	}
 }
 
