@@ -16,15 +16,15 @@
 #define DEBUG_LEVEL 1
 
 // Порт для подключения по Telnet к Arduino, для просмотра логов
-#define DEBUG_SERVER_PORT 23
+// #define DEBUG_SERVER_PORT 23
 
 // ПИН на который нужно подать GND при необходимости отключиться от сети!
 #define DEBUG_PIN 14
 
 // ПИН для Счетчика электроэнергии
-#define POWER_PIN A0
+// #define POWER_PIN A0
 // ПИН для Счетчика электроэнергии
-#define POWER_LED_PIN 13
+// #define POWER_LED_PIN 13
 
 // Кол-во попыток связаться с сервером, после чего система перейдет в Дебаг режим (Без сети)
 #define SERVER_CONNECT_MAX_COUNT 5
@@ -45,7 +45,7 @@ IPAddress ip(192,168,1,100);
 char Server_IP[14] = "192.168.1.200";
 const int Server_PORT = 80;
 
-const String Power_url = "/objects/?script=ElectroCounter";
+// const String Power_url = "/objects/?script=ElectroCounter";
 
 // Скрипты для переключения светильников, список взят из MajorDomo
 const String Light_switch_url[] = {"/objects/?object=Light_01&op=m&m=", "/objects/?object=Light_02&op=m&m=", "/objects/?object=Light_03&op=m&m=", "/objects/?object=Light_04&op=m&m=", "/objects/?object=Light_05&op=m&m=", "/objects/?object=Light_06&op=m&m=", "/objects/?object=Light_07&op=m&m=", 
@@ -54,18 +54,20 @@ const String Light_switch_url[] = {"/objects/?object=Light_01&op=m&m=", "/object
 // Пины для Вывода на РЕЛЕ
 const int light[] = {23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49};
 
-// Пины для Выклюателей, должны быть подтянуты к земле через резистор 10K
+// Пины для Выключателей, должны быть подтянуты к земле через резистор 10K
 const int btn[] =  {22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48};
 
 // Состояние лампочек
-int light_state[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+boolean light_state[] = {LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW};
 
 // Состояние лампочек
-int light_state_switch[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
+boolean light_state_switch[] = {LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW};
 
 // Текущее состояние выключателей
-int btn_state_prev[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+boolean btn_state_prev[] =  {LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW};
+
+// Настройка импульсных выключателей
+boolean btn_state_pulse[] = {LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW};
 
 // переменные для эмитации команды delay
 unsigned long last_millis_btn = 0;
@@ -76,7 +78,7 @@ unsigned long last_millis_send_status = 0;
 unsigned long last_millis_resend_status = 0;
 
 // Текущее кол-во попыток связаться с сервером
-int check_cnt = 0;
+byte check_cnt = 0;
 // Максимальное кол-во попыток связаться с сервером
 const int check_cnt_max = SERVER_CONNECT_MAX_COUNT; 
 
@@ -86,11 +88,11 @@ int debug_state = 0;
 EthernetClient net;
 EthernetClient mqtt_net;
 
-EthernetServer TelnetServer(DEBUG_SERVER_PORT);
+// EthernetServer TelnetServer(DEBUG_SERVER_PORT);
 EthernetServer server_http(80);
 
 // Кол-во клиентов способных подключиться по telnet
-EthernetClient Telnet_clients[10];
+// EthernetClient Telnet_clients[10];
 
 PubSubClient MQTT_client(mqtt_net);
 
@@ -99,28 +101,25 @@ String readString;
 int HighMillis=0;
 int Rollover=0;
 
-int lastPowerState = 0;
-
-struct port_param_t {String name;int value;};
-
-#define MAX_PARAMS 10
-
-port_param_t params[MAX_PARAMS];
+// int lastPowerState = 0;
+// struct port_param_t {String name;int value;};
+// #define MAX_PARAMS 10
+// port_param_t params[MAX_PARAMS];
 
 unsigned long currentMillis = millis();
 
 void setup() {
 	Serial.begin(9600);
 
-	Power_setup();
+	// Power_setup();
 	
 	Time_setup();
 	
 	debug_log("Network_setup");
 	Network_setup();
 	
-	debug_log("Telnet_setup");
-	Telnet_setup();
+	// debug_log("Telnet_setup");
+	// Telnet_setup();
 
 	debug_log("WebServer_setup");
 	WebServer_setup();
@@ -153,7 +152,7 @@ void loop() {
 	
 	WebServer_loop();
 	
-	Telnet_loop();
+	// Telnet_loop();
 
-	Power_loop();
+	// Power_loop();
 }

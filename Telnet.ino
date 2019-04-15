@@ -1,15 +1,18 @@
 // Функция вывода в лог
 void debug_log(String str) {
+	
 	if (DEBUG_LEVEL) {
 		Serial.println(str);
 	}
+	
 }
 
 void Telnet_setup() {
-	TelnetServer.begin();
+	// TelnetServer.begin();
 }
 
 void Telnet_loop() {
+	/*
 	// проверяем наличие нового клиента по Telnet
 	EthernetClient client1 = TelnetServer.available();
 	if (client1) {
@@ -43,13 +46,16 @@ void Telnet_loop() {
 			Telnet_clients[i].stop();
 		}
 	}
+	*/
 }
 
 void Telnet_log(String str) {
+	/*
 	for (byte i = 0; i < 10; i++) {
 		if (Telnet_clients[i]) {
 			Telnet_clients[i].println(str);
 		}
 	}
+	*/
 }
 

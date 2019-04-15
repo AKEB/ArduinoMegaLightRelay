@@ -1,6 +1,6 @@
 void Power_setup() {
-	pinMode(POWER_LED_PIN,OUTPUT);
-	pinMode(POWER_PIN,INPUT);
+	// pinMode(POWER_LED_PIN,OUTPUT);
+	// pinMode(POWER_PIN,INPUT);
 }
 
 void Power_loop() {

@@ -28,7 +28,7 @@ void Network_check() {
 	if (currentMillis - last_millis_check > 1000) {
 		last_millis_check = currentMillis;
 		
-		net.setTimeout(500);
+		net.setTimeout(200);
 		net.stop();
 		if (net.connect(Server_IP, MQTT_PORT)) {
 			check_cnt = 0;

@@ -31,7 +31,7 @@ void sendStatusLights() {
 	
 	for(int i=0; i<14; i++) {
 		if (!debug_state) {
-			if (light_state_switch[i] > 0) {
+			if (light_state_switch[i] == HIGH) {
 				Network_httpRequest(Light_switch_url[i] + (light_state[i] ? "turnOn":"turnOff"));
 			}
 		} else {
