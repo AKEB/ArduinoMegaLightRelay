@@ -17,15 +17,17 @@ String DisplayAddress(IPAddress address) {
 
 // Проверка наличия сети, попытка подключиться к серверу MajorDomo по 80 порту
 void Network_check() {
-	int debug = digitalRead(debug_pin);
-	if (debug) {
-		debug_state = 1;
-		return;
-	}
-	
 	unsigned long currentMillis = millis();
 	if (currentMillis < last_millis_check) last_millis_check = 0;
-	if (currentMillis - last_millis_check > 1000) {
+	if (currentMillis - last_millis_check > 5000) {
+		int debug = digitalRead(debug_pin);
+		if (debug) {
+			debug_state = 1;
+			return;
+		} else {
+			debug_state = 0;
+		}
+		
 		last_millis_check = currentMillis;
 		
 		net.setTimeout(200);
@@ -43,8 +45,6 @@ void Network_check() {
 			}
 		}
 	}
-	
-	debug_state = 0;
 	return;
 }
 

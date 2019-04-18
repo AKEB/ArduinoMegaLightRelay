@@ -39,7 +39,7 @@ IPAddress ip(192,168,1,100);
 #define MQTT_PORT       1883
 #define MQTT_CLIENT_ID  "lightshild"
 #define MQTT_USER       "akeb"
-#define MQTT_PASSWORD   "Akeb123Akeb"
+#define MQTT_PASSWORD   "password"
 
 // IP адрес сервера MajorDomo куда надо посылать команду на переключение света, при назатии на выключатель
 char Server_IP[14] = "192.168.1.200";
@@ -67,7 +67,7 @@ boolean light_state_switch[] = {LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW
 boolean btn_state_prev[] =  {LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW};
 
 // Настройка импульсных выключателей
-boolean btn_state_pulse[] = {LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW};
+boolean btn_state_pulse[] = {HIGH, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, LOW, HIGH, HIGH, LOW, LOW};
 
 // переменные для эмитации команды delay
 unsigned long last_millis_btn = 0;

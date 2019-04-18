@@ -5,7 +5,7 @@ void Buttons_setup() {
 }
 
 void Buttons_loop() {
-	if (currentMillis - last_millis_btn > 100UL) {
+	if (currentMillis - last_millis_btn > 50UL) {
 		// Проверяем сеть
 		Network_check();
 		
@@ -49,4 +49,3 @@ void Buttons_loop() {
 		
 	}
 }
-
