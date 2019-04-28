@@ -17,7 +17,6 @@ String DisplayAddress(IPAddress address) {
 
 // Проверка наличия сети, попытка подключиться к серверу MajorDomo по 80 порту
 void Network_check() {
-	unsigned long currentMillis = millis();
 	if (currentMillis < last_millis_check) last_millis_check = 0;
 	if (currentMillis - last_millis_check > 5000) {
 		int debug = digitalRead(debug_pin);
