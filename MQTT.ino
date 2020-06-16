@@ -1,6 +1,6 @@
 void MQTT_setup() {
 	//MQTT_client.setServer(mqtt_server, MQTT_PORT);
-	MQTT_client.setServer(Server_IP, MQTT_PORT);
+	MQTT_client.setServer(MQTT_IP, MQTT_PORT);
 	
 	MQTT_client.setCallback(callback);
 }

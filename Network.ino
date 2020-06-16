@@ -32,7 +32,7 @@ void Network_check() {
 		
 		net.setTimeout(200);
 		net.stop();
-		if (net.connect(Server_IP, MQTT_PORT)) {
+		if (net.connect(MQTT_IP, MQTT_PORT)) {
 			check_cnt = 0;
 			debug_state = 0;
 			return;
